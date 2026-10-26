@@ -17,7 +17,7 @@ public class WakeOnLanServiceImpl implements WakeOnLanService {
     @Value("${nettools.wol.mac-address}")
     private String macAddress;
 
-    @Value("${nettools.wol.mac-address}")
+    @Value("${nettools.wol.broadcast-address}")
     private String broadcastAddress;
 
     @Override

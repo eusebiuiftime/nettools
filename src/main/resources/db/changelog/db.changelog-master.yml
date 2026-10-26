@@ -4,5 +4,5 @@ databaseChangeLog:
       relativeToChangelogFile: true
 
   - include:
-      file: changes/002-create-modem-measurement.yml
+      file: changes/002-create-modem-traffic.yml
       relativeToChangelogFile: true

@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - include:
+      file: changes/001-create-modem.yml
+      relativeToChangelogFile: true
+
+  - include:
+      file: changes/002-create-modem-measurement.yml
+      relativeToChangelogFile: true

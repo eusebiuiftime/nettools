@@ -29,3 +29,9 @@ management:
 logging:
   level:
     dev.eusebiu.nettools: DEBUG
+
+
+nettools:
+  wol:
+    mac-address: ${WOL_MAC_ADDRESS}
+    broadcast-address: ${WOL_BROADCAST_ADDRESS}

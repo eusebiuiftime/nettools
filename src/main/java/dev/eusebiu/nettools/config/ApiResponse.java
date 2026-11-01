@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public record ApiResponse<T>(
         int status,
-        String StatusCode,
+        String statusCode,
         T data,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime timestamp

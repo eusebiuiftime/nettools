@@ -1,5 +1,6 @@
 package dev.eusebiu.nettools.service.impl;
 
+import dev.eusebiu.nettools.exception.WakeOnLanException;
 import dev.eusebiu.nettools.service.WakeOnLanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +55,7 @@ public class WakeOnLanServiceImpl implements WakeOnLanService {
             }
 
         } catch (IOException e) {
-            throw new IllegalStateException("Unable to send magic packet to " + broadcastAddress, e);
+            throw new WakeOnLanException("Failed to send magic packet to " + broadcastAddress, e);
         }
 
 

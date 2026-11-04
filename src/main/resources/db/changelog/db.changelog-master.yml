@@ -6,3 +6,15 @@ databaseChangeLog:
   - include:
       file: changes/002-create-modem-traffic.yml
       relativeToChangelogFile: true
+
+  - include:
+      file: changes/003-create-user.yml
+      relativeToChangelogFile: true
+
+  - include:
+      file: changes/004-create-role.yml
+      relativeToChangelogFile: true
+
+  - include:
+      file: changes/005-create-user-role.yml
+      relativeToChangelogFile: true

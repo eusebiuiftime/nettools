@@ -20,6 +20,18 @@ spring:
     database-change-log-table: z_databasechangelog
     database-change-log-lock-table: z_databasechangeloglock
 
+  mail:
+    host: smtp.zoho.eu
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 management:
   endpoints:
     web:
@@ -32,6 +44,9 @@ logging:
 
 
 nettools:
+  mail:
+    from: ${MAIL_FROM}
+
   wol:
     mac-address: ${WOL_MAC_ADDRESS}
     broadcast-address: ${WOL_BROADCAST_ADDRESS}

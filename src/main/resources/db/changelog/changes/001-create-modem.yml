@@ -19,7 +19,8 @@ databaseChangeLog:
                   firmware_version VARCHAR(100),
                   host VARCHAR(255) NOT NULL UNIQUE,
                   enabled BOOLEAN NOT NULL DEFAULT TRUE,
-                  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
               );
 
       rollback:

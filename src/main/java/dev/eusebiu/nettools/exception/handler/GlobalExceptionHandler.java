@@ -1,6 +1,8 @@
 package dev.eusebiu.nettools.exception.handler;
 
 import dev.eusebiu.nettools.config.ApiResponse;
+import dev.eusebiu.nettools.exception.InvalidRegistrationException;
+import dev.eusebiu.nettools.exception.UserAlreadyExistException;
 import dev.eusebiu.nettools.exception.WakeOnLanException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.parsing.Problem;
@@ -29,6 +31,22 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status)
                 .body(ApiResponse.error("An unexpected error occurred", status));
+    }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<?> handleUserAlreadyExistsException(UserAlreadyExistException e) {
+        log.warn("User already exists: {}", e.getMessage());
+        HttpStatus status = HttpStatus.CONFLICT;
+        return  ResponseEntity.status(status)
+                .body(ApiResponse.error(e.getMessage(), status));
+    }
+
+    @ExceptionHandler(InvalidRegistrationException.class)
+    public ResponseEntity<?> handleInvalidRegistrationException(InvalidRegistrationException e) {
+        log.warn("Invalid registration exception: {}", e.getMessage());
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return  ResponseEntity.status(status)
+                .body(ApiResponse.error(e.getMessage(), status));
     }
 
 }

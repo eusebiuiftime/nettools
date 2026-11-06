@@ -1,5 +1,6 @@
 package dev.eusebiu.nettools.entity;
 
+import dev.eusebiu.nettools.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "name")
-    private String name;
+    private RoleEnum name;
 }

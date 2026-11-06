@@ -1,7 +1,10 @@
 package dev.eusebiu.nettools.service.impl;
 
 import dev.eusebiu.nettools.dto.RegisterRequestDTO;
+import dev.eusebiu.nettools.entity.Role;
+import dev.eusebiu.nettools.enums.RoleEnum;
 import dev.eusebiu.nettools.exception.InvalidRegistrationException;
+import dev.eusebiu.nettools.exception.NicknameAlreadyExistsException;
 import dev.eusebiu.nettools.exception.UserAlreadyExistException;
 import dev.eusebiu.nettools.repository.RoleRepository;
 import dev.eusebiu.nettools.repository.UserRepository;
@@ -25,13 +28,22 @@ public class AuthServiceImpl implements AuthService {
 
         RegisterRequestDTO requestNormalized = validateAndNormalize(request);
 
-
-
-        if (userRepository.existByEmail(email)) {
-            throw new UserAlreadyExistException("Email already registered");
+        if (this.userRepository.existsByEmail(requestNormalized.email())) {
+            throw new UserAlreadyExistException("User with email %s already exist".formatted(requestNormalized.email()));
         }
 
+        if (this.userRepository.existsByNicknameIgnoreCase(requestNormalized.nickname())) {
+            throw new NicknameAlreadyExistsException("Nickname already registered");
+        }
+
+        Role role = roleRepository.findByName(RoleEnum.ROLE_USER)
+                .orElseThrow(() -> new IllegalStateException("ROLE_USER not found"));
+
+
     }
+
+
+
 
     private RegisterRequestDTO validateAndNormalize(RegisterRequestDTO request) {
 

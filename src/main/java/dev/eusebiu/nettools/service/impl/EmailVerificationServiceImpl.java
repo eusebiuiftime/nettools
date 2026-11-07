@@ -81,8 +81,8 @@ public class EmailVerificationServiceImpl  implements EmailVerificationService {
             String html = template.getContentAsString(StandardCharsets.UTF_8);
 
             return html
-                    .replace("{code}", code)
-                    .replace("{minutes}", String.valueOf(minutes));
+                    .replace("{{CODE}}", code)
+                    .replace("{{minutes}}", String.valueOf(minutes));
 
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load email template", e);

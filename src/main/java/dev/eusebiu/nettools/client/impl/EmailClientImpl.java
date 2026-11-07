@@ -32,6 +32,7 @@ public class EmailClientImpl implements EmailClient {
            helper.setSubject(subject);
            helper.setText(html, true);
 
+           this.javaMailSender.send(mimeMessage);
 
        } catch (MessagingException e) {
            throw new IllegalStateException("Failed to send email", e);

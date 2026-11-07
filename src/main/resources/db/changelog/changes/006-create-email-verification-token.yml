@@ -24,11 +24,10 @@ databaseChangeLog:
 
                   CONSTRAINT fk_email_verification_token_user
                       FOREIGN KEY (user_id_fk)
-                      REFERENCES "user"(id)
+                      REFERENCES "user"(id),
+                  CONSTRAINT chk_email_verification_failed_attempts
+                      CHECK (failed_attempts >= 0)
               );
-              
-              CONSTRAINT chk_email_verification_failed_attempts
-              CHECK (failed_attempts >= 0)
 
               CREATE INDEX idx_email_verification_token_user
                   ON email_verification_token(user_id_fk);

@@ -2,6 +2,7 @@ package dev.eusebiu.nettools.service.impl;
 
 import dev.eusebiu.nettools.dto.RegisterRequestDTO;
 import dev.eusebiu.nettools.entity.Role;
+import dev.eusebiu.nettools.entity.User;
 import dev.eusebiu.nettools.enums.RoleEnum;
 import dev.eusebiu.nettools.exception.InvalidRegistrationException;
 import dev.eusebiu.nettools.exception.NicknameAlreadyExistsException;
@@ -25,11 +26,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void register(RegisterRequestDTO request) {
-
         RegisterRequestDTO requestNormalized = validateAndNormalize(request);
 
         if (this.userRepository.existsByEmail(requestNormalized.email())) {
-            throw new UserAlreadyExistException("User with email %s already exist".formatted(requestNormalized.email()));
+            throw new UserAlreadyExistException("User with email %s already exist"
+                    .formatted(requestNormalized.email())
+            );
         }
 
         if (this.userRepository.existsByNicknameIgnoreCase(requestNormalized.nickname())) {
@@ -39,14 +41,21 @@ public class AuthServiceImpl implements AuthService {
         Role role = roleRepository.findByName(RoleEnum.ROLE_USER)
                 .orElseThrow(() -> new IllegalStateException("ROLE_USER not found"));
 
+        String password = passwordEncoder.encode(requestNormalized.password());
 
+        User user = User.builder()
+                .email(requestNormalized.email())
+                .nickname(requestNormalized.nickname())
+                .passwordHash(password)
+                .enabled(true)
+                .emailVerified(false)
+                .build();
+
+        user.getRoles().add(role);
+        this.userRepository.save(user);
     }
 
-
-
-
     private RegisterRequestDTO validateAndNormalize(RegisterRequestDTO request) {
-
         if (request == null
                 || request.email() == null || request.email().isBlank()
                 || request.nickname() == null || request.nickname().isBlank()

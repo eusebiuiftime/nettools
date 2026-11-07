@@ -23,7 +23,15 @@ public class EmailVerificationToken {
 
     private Instant usedAt;
 
+    @Builder.Default
+    @Column(name = "failed_attempts", nullable = false)
+    private Integer failedAttempts = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id_fk")
     private User user;
+
+    public void incrementFailedAttempts() {
+        this.failedAttempts++;
+    }
 }

@@ -51,13 +51,10 @@ public class WakeOnLanServiceImpl implements WakeOnLanService {
                 log.info("Sending magic packet to {}", broadcastAddress);
                 socket.send(packet);
                 log.info("Sent magic packet to {}", broadcastAddress);
-
             }
 
         } catch (IOException e) {
             throw new WakeOnLanException("Failed to send magic packet to " + broadcastAddress, e);
         }
-
-
     }
 }

@@ -12,6 +12,7 @@ import dev.eusebiu.nettools.repository.RoleRepository;
 import dev.eusebiu.nettools.repository.UserRepository;
 import dev.eusebiu.nettools.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Locale;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -31,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void register(RegisterRequestDTO request) {
-
+        log.info("User registration started");
         RegisterRequestDTO requestNormalized = validateAndNormalize(request);
 
         if (this.userRepository.existsByEmail(requestNormalized.email())) {
@@ -60,6 +62,8 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         user.getRoles().add(role);
         this.userRepository.save(user);
+
+        log.debug("User persisted, awaiting commit: userId={}", user.getId());
 
         this.applicationEventPublisher.publishEvent(
                 new UserRegisteredEvent(user.getId())

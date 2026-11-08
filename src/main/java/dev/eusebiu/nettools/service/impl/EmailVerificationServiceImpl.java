@@ -3,7 +3,9 @@ package dev.eusebiu.nettools.service.impl;
 import dev.eusebiu.nettools.client.EmailClient;
 import dev.eusebiu.nettools.entity.EmailVerificationToken;
 import dev.eusebiu.nettools.entity.User;
+import dev.eusebiu.nettools.exception.UserNotFoundException;
 import dev.eusebiu.nettools.repository.EmailVerificationTokenRepository;
+import dev.eusebiu.nettools.repository.UserRepository;
 import dev.eusebiu.nettools.service.EmailVerificationService;
 
 
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -30,10 +34,15 @@ public class EmailVerificationServiceImpl  implements EmailVerificationService {
     private Resource template;
 
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
+    private final UserRepository userRepository;
     private final EmailClient emailClient;
 
     @Override
-    public void sendVerificationCode(User user) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void sendVerificationCode(Long userId) {
+        User user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
         int expiration = 10;
         String code = generateCode();
         String tokenHash = hashCode(code);

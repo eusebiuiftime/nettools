@@ -2,9 +2,9 @@
 
 ![NetTools banner](docs/images/Banner%20tecnologico%20neon%20NetTools.png)
 
-# NetTools
+# NetTools Services
 
-**A modular platform for homelab management, monitoring, and automation.**
+**The backend services powering the NetTools homelab platform.**
 
 ![Java 21](https://img.shields.io/badge/Java-21-18c8e8?style=flat-square)
 ![Spring Boot 4.1.2](https://img.shields.io/badge/Spring_Boot-4.1.2-6DB33F?style=flat-square&logo=springboot&logoColor=white)
@@ -16,7 +16,9 @@
 
 </div>
 
-NetTools is an evolving personal homelab platform designed to bring device management, network monitoring, and infrastructure automation into a unified ecosystem. It grows alongside the infrastructure it supports, turning practical needs into opportunities to explore backend engineering, security, and system integration.
+NetTools Services is the backend of **NetTools**, an evolving personal homelab platform designed to bring device management, network monitoring, and infrastructure automation into a unified ecosystem. It grows alongside the infrastructure it supports, turning practical needs into opportunities to explore backend engineering, security, and system integration.
+
+This repository contains `nettools-services`: the platform's APIs, persistence, integrations, and automation services. A future `nettools-portal` will provide the frontend.
 
 ## Vision
 
@@ -51,7 +53,7 @@ The current repository contains a backend API. Historical data visualization rem
 
 ## Architecture
 
-NetTools currently runs as a single Spring Boot application organized into controller, service, repository, and integration layers. This provides a shared foundation for the platform's growing set of capabilities.
+NetTools Services currently runs as a single Spring Boot application organized into controller, service, repository, and integration layers, under the base Java package `dev.eusebiu.nettools`. This provides a shared foundation for the platform's growing set of capabilities.
 
 ```mermaid
 flowchart LR

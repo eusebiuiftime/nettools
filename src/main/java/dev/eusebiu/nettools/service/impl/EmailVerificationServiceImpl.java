@@ -63,7 +63,7 @@ public class EmailVerificationServiceImpl  implements EmailVerificationService {
 
         this.emailClient.send(
                 user.getEmail(),
-                "%s è il tuo codice di verifica NetTools"
+                "%s is your NetTools verification code"
                         .formatted(code),
                 html
         );

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.eusebiu</groupId>
-	<artifactId>nettools</artifactId>
+	<artifactId>nettools-services</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>NetTools Services</name>
+	<description>Backend services for the NetTools homelab platform.</description>
 	<url/>
 	<licenses>
 		<license/>

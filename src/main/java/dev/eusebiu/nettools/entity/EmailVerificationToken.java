@@ -34,4 +34,8 @@ public class EmailVerificationToken {
     public void incrementFailedAttempts() {
         this.failedAttempts++;
     }
+
+    public void markAsUsed(Instant now) {
+        this.usedAt = now;
+    }
 }

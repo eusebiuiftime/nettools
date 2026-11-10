@@ -1,10 +1,7 @@
 package dev.eusebiu.nettools.exception.handler;
 
 import dev.eusebiu.nettools.config.ApiResponse;
-import dev.eusebiu.nettools.exception.InvalidRegistrationException;
-import dev.eusebiu.nettools.exception.NicknameAlreadyExistsException;
-import dev.eusebiu.nettools.exception.UserAlreadyExistException;
-import dev.eusebiu.nettools.exception.WakeOnLanException;
+import dev.eusebiu.nettools.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +49,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleNicknameAlreadyExistsException(NicknameAlreadyExistsException e) {
         log.warn("Nickname already exists: {}", e.getMessage());
         HttpStatus status = HttpStatus.CONFLICT;
+        return  ResponseEntity.status(status)
+                .body(ApiResponse.error(e.getMessage(), status));
+    }
+
+    @ExceptionHandler(VerificationCodeException.class)
+    public ResponseEntity<?> handleVerificationCodeException(VerificationCodeException e) {
+        log.warn("Verification code exception: {}", e.getMessage());
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         return  ResponseEntity.status(status)
                 .body(ApiResponse.error(e.getMessage(), status));
     }

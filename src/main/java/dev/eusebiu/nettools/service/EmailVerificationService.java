@@ -5,4 +5,6 @@ import dev.eusebiu.nettools.entity.User;
 public interface EmailVerificationService {
 
     void sendVerificationCode(Long userId);
+
+    void verifyCode(String email, String code);
 }

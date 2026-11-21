@@ -3,6 +3,7 @@ package dev.eusebiu.nettools.service.impl;
 import dev.eusebiu.nettools.client.EmailClient;
 import dev.eusebiu.nettools.entity.EmailVerificationToken;
 import dev.eusebiu.nettools.entity.User;
+import dev.eusebiu.nettools.event.ResendCodeEvent;
 import dev.eusebiu.nettools.exception.UserAlreadyExistException;
 import dev.eusebiu.nettools.exception.UserNotFoundException;
 import dev.eusebiu.nettools.exception.VerificationCodeException;
@@ -12,8 +13,10 @@ import dev.eusebiu.nettools.service.EmailVerificationService;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,6 +31,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HexFormat;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationServiceImpl  implements EmailVerificationService {
@@ -38,6 +42,7 @@ public class EmailVerificationServiceImpl  implements EmailVerificationService {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final UserRepository userRepository;
     private final EmailClient emailClient;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private static final int MAX_ATTEMPTS = 5;
 
@@ -67,6 +72,26 @@ public class EmailVerificationServiceImpl  implements EmailVerificationService {
                         .formatted(code),
                 html
         );
+    }
+
+    @Override
+    @Transactional
+    public void resendVerificationCode(String email) {
+        log.info("Verification code resend requested");
+
+        var user = this.userRepository
+                .findByEmailIgnoreCase(email).orElseThrow(() -> new VerificationCodeException(
+                        "Unable to resend verification code"
+                ));
+
+        if (Boolean.TRUE.equals(user.getEmailVerified())) {
+            throw new VerificationCodeException("Email already verified");
+        }
+
+        this.applicationEventPublisher.publishEvent(
+                new ResendCodeEvent(user.getId())
+        );
+        log.debug("ResendCodeEvent published: userId={}", user.getId());
     }
 
     @Override

@@ -39,6 +39,13 @@ public class AuthController {
         return ResponseEntity.ok(
                 ApiResponse.ok("Verify email successfully.")
         );
+    }
 
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerificationCode(String email) {
+        this.emailVerificationService.resendVerificationCode(email);
+        return ResponseEntity.ok(
+                ApiResponse.ok("Verification code resend successfully.")
+        );
     }
 }

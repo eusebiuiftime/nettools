@@ -6,5 +6,7 @@ public interface EmailVerificationService {
 
     void sendVerificationCode(Long userId);
 
+    void resendVerificationCode(String email);
+
     void verifyCode(String email, String code);
 }

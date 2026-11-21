@@ -23,7 +23,7 @@ public class WakeOnLanServiceImpl implements WakeOnLanService {
 
     @Override
     public void wake() {
-
+        log.info("WOL requested");
         try {
             byte[] macAddressBytes = HexFormat.ofDelimiter(":").parseHex(macAddress);
             byte[] magicPacket = new byte[102];

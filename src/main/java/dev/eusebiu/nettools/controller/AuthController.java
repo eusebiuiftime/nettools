@@ -1,6 +1,7 @@
 package dev.eusebiu.nettools.controller;
 
 import dev.eusebiu.nettools.config.ApiResponse;
+import dev.eusebiu.nettools.dto.LoginRequestDTO;
 import dev.eusebiu.nettools.dto.RegisterRequestDTO;
 import dev.eusebiu.nettools.dto.VerifyEmailRequestDTO;
 import dev.eusebiu.nettools.service.AuthService;
@@ -46,6 +47,13 @@ public class AuthController {
         this.emailVerificationService.resendVerificationCode(email);
         return ResponseEntity.ok(
                 ApiResponse.ok("Verification code resend successfully.")
+        );
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(
+                ApiResponse.ok(this.authService.login(request))
         );
     }
 }

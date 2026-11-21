@@ -1,5 +1,7 @@
 package dev.eusebiu.nettools.service.impl;
 
+import dev.eusebiu.nettools.dto.LoginRequestDTO;
+import dev.eusebiu.nettools.dto.LoginResponseDTO;
 import dev.eusebiu.nettools.dto.RegisterRequestDTO;
 import dev.eusebiu.nettools.entity.Role;
 import dev.eusebiu.nettools.entity.User;
@@ -10,10 +12,14 @@ import dev.eusebiu.nettools.exception.NicknameAlreadyExistsException;
 import dev.eusebiu.nettools.exception.UserAlreadyExistException;
 import dev.eusebiu.nettools.repository.RoleRepository;
 import dev.eusebiu.nettools.repository.UserRepository;
+import dev.eusebiu.nettools.security.JwtService;
 import dev.eusebiu.nettools.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
     @Transactional
@@ -48,12 +56,12 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
-        Role role = roleRepository.findByName(RoleEnum.ROLE_USER)
+        var role = roleRepository.findByName(RoleEnum.ROLE_USER)
                 .orElseThrow(() -> new IllegalStateException("ROLE_USER not found"));
 
         String password = passwordEncoder.encode(requestNormalized.password());
 
-        User user = User.builder()
+        var user = User.builder()
                 .email(requestNormalized.email())
                 .nickname(requestNormalized.nickname())
                 .passwordHash(password)
@@ -68,6 +76,18 @@ public class AuthServiceImpl implements AuthService {
         this.applicationEventPublisher.publishEvent(
                 new UserRegisteredEvent(user.getId())
         );
+    }
+
+    @Override
+    public LoginResponseDTO login(LoginRequestDTO request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
+        String token = this.jwtService.generateAccessToken(authentication);
+        return new LoginResponseDTO(token, "Bearer");
     }
 
     private RegisterRequestDTO validateAndNormalize(RegisterRequestDTO request) {

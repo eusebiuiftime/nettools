@@ -23,6 +23,7 @@ public class JwtConfig {
                 .build();
     }
 
+    @Bean
     public JwtDecoder jwtDecoder(SecretKey secretKey) {
         return NimbusJwtDecoder
                 .withSecretKey(secretKey)

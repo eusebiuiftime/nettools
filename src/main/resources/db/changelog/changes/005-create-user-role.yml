@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-user-role
+      author: eusebiu
+
+      preConditions:
+        - onFail: HALT
+        - tableExists:
+            tableName: user
+        - tableExists:
+            tableName: role
+        - not:
+            - tableExists:
+                tableName: user_role
+
+      changes:
+        - sql:
+            sql: |
+              CREATE TABLE user_role (
+                  user_id_fk BIGINT NOT NULL,
+                  role_id_fk BIGINT NOT NULL,
+
+                  CONSTRAINT pk_user_role
+                      PRIMARY KEY (user_id_fk, role_id_fk),
+              
+                  CONSTRAINT fk_user_role_user
+                      FOREIGN KEY (user_id_fk)
+                      REFERENCES "user"(id),
+
+                  CONSTRAINT fk_user_role_role
+                      FOREIGN KEY (role_id_fk)
+                      REFERENCES role(id)
+              );
+
+      rollback:
+        - sql:
+            sql: |
+              DROP TABLE user_role;

@@ -32,11 +32,11 @@ The project combines practical infrastructure work with continuous learning in A
 
 | Area | Current implementation | Status and next steps |
 | --- | --- | --- |
-| **Wake-on-LAN** | UDP magic-packet sender on port 9, exposed through `POST /api/wol`, using one configured MAC and broadcast address. | **Implemented core.** API access depends on the unfinished authentication flow. |
+| **Wake-on-LAN** | UDP magic packets on port 9 through `POST /api/wol/wake`, using one configured MAC and broadcast address. | **Implemented core.** The endpoint requires authentication and declares an admin role check. Role enforcement still needs integration coverage. |
 | **Device management** | No device registry or user-to-device association yet. | **Planned.** Multiple registered devices per account and further device management capabilities. |
-| **User registration** | `POST /api/auth/register`, input validation, duplicate checks, BCrypt password hashing, persisted users, and default role assignment. | **Implemented registration.** Account management is planned; authenticated access remains in development. |
-| **Email verification** | Six-digit OTP generation, hashed token storage with a ten-minute expiry, and HTML email delivery triggered after registration commits. | **Partially implemented.** OTP validation, resend, and email-verification completion are pending. |
-| **Access control** | Spring Security request rules, CSRF protection, and user/role persistence. | **In development.** Login and JWT authentication are not implemented; OAuth2 resource-server configuration is currently disabled. |
+| **User registration** | `POST /api/auth/register`, input validation, duplicate checks, BCrypt password hashing, persisted users, and default role assignment. | **Implemented registration.** Account management is planned. |
+| **Email verification** | Six-digit codes sent by email, hashed storage, ten-minute expiry, attempt limits, verification, and resend. | **Implemented.** End-to-end coverage is planned. |
+| **Access control** | JWT login for enabled accounts with verified email, bearer token validation, CSRF rules, and persisted roles. | **Implemented authentication.** Resource-level authorization remains planned. |
 | **ZTE MC889 5G** | Modem and traffic entities, repositories, and database migrations. | **Persistence foundation.** Modem communication, scheduled collection, network-state retrieval, and historical analysis are planned. |
 
 The current repository contains a backend API. Historical data visualization remains a future extension.
@@ -150,13 +150,15 @@ Once the backend starts:
 | Swagger UI | <http://localhost:8080/swagger-ui/index.html> |
 | OpenAPI specification | <http://localhost:8080/v3/api-docs> |
 
-Registration, health, and the documented Swagger/OpenAPI paths are permitted by the current security rules. Other routes require authentication. In particular, `/api/wol` cannot yet be used through a completed application login flow; the sender exists, but authenticated access is still under development.
+The authentication endpoints, health, and the documented Swagger/OpenAPI paths are public. Protected routes require a valid bearer token.
 
 ## Roadmap
 
-- [ ] Align entity IDs with database migrations and strengthen integration coverage.
-- [ ] Complete OTP verification, resend handling, authentication, and resource authorization.
-- [ ] Introduce a user-owned device registry with multiple devices per account and device-specific Wake-on-LAN actions.
+- [x] Add account registration, email verification with code resend, and JWT login.
+- [x] Expose Wake-on-LAN through an authenticated endpoint.
+- [ ] Verify admin-only Wake-on-LAN access and add integration coverage for registration, verification, and login.
+- [ ] Add a device registry so users can manage their own devices.
+- [ ] Enable Wake-on-LAN for individual registered devices.
 - [ ] Connect the ZTE MC889 integration to traffic collection and connectivity-state persistence.
 - [ ] Build historical monitoring and analysis on top of collected data.
 - [ ] Add homelab services, administration tools, and automations as new infrastructure needs emerge.
